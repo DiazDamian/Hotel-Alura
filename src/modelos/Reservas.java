@@ -67,4 +67,10 @@ public class Reservas {
 		this.formaPago = formaPago;
 	}
 
+	@Override
+	public String toString() {
+		return "Reservas :" + id + ", fechaEntrada=" + fechaEntrada + ", fechaSalida=" + fechaSalida + ", valor="
+				+ valor + ", formaPago=" + formaPago;
+	}
+
 }

@@ -21,7 +21,7 @@ public class ReservasDAO {
 		List<Reservas> resultado= new ArrayList<>();
 		
 		try {
-			String query="SELECT id, fechaEntrada, fechaSalida, valor, formaPago FROM reservas";
+			String query="SELECT id, fechaDeEntrada, fechaDeSalida, valor, formaPago FROM reservas";
 			final PreparedStatement state = con.prepareStatement(query);
 				try(state){
 					final ResultSet res =state.executeQuery();
@@ -39,7 +39,7 @@ public class ReservasDAO {
 	
 	
 	public void guardarReserva(Reservas reserva) {
-		String query="INSERT INTO reservas (fechaEntrada, fechaSalida, valor, formaPago) VALUES (?,?,?,?)";
+		String query="INSERT INTO reservas (fechaDeEntrada, fechaDeSalida, valor, formaPago) VALUES (?,?,?,?)";
 		try {
 			final PreparedStatement state = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
 			state.setDate(1, reserva.getFechaEntrada());
@@ -59,7 +59,7 @@ public class ReservasDAO {
 	}
 	
 	public void actualizarReserva(Date fechaEntrada,Date fechaSalida,String valor,String formaPago,Integer id) {
-		String query="UPDATE reservas SET fechaEntrada = ? , fechaSalida = ? , valor = ? , formaPago = ? WHERE id = ?";
+		String query="UPDATE reservas SET fechaDeEntrada = ? , fechaDeSalida = ? , valor = ? , formaPago = ? WHERE id = ?";
 		try {
 		
 		final PreparedStatement state = con.prepareStatement(query);
