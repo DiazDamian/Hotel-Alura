@@ -273,12 +273,12 @@ public class ReservasView extends JFrame {
 		panel.add(txtFechaSalida);
 
 		txtValor = new JTextField();
+		txtValor.setToolTipText("");
 		txtValor.setBackground(SystemColor.text);
-		txtValor.setHorizontalAlignment(SwingConstants.CENTER);
+		txtValor.setHorizontalAlignment(SwingConstants.LEFT);
 		txtValor.setForeground(Color.BLACK);
-		txtValor.setBounds(78, 328, 43, 33);
-		txtValor.setEditable(false);
-		txtValor.setFont(new Font("Roboto Black", Font.BOLD, 17));
+		txtValor.setBounds(68, 328, 289, 33);
+		txtValor.setFont(new Font("Roboto", Font.PLAIN, 18));
 		txtValor.setBorder(javax.swing.BorderFactory.createEmptyBorder());
 		panel.add(txtValor);
 		txtValor.setColumns(10);
@@ -309,6 +309,13 @@ public class ReservasView extends JFrame {
 		btnsiguiente.setBounds(238, 493, 122, 35);
 		panel.add(btnsiguiente);
 		btnsiguiente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+		
+		JLabel lblNewLabel = new JLabel("Siguiente");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setForeground(Color.WHITE);
+		lblNewLabel.setFont(new Font("Roboto", Font.PLAIN, 18));
+		lblNewLabel.setBounds(0, 0, 122, 35);
+		btnsiguiente.add(lblNewLabel);
 
 
 	}
