@@ -36,6 +36,25 @@ public class HuespedesDAO {
 		return resultado;
 	}
 	
+	public List<Huespedes> buscarHuespedesPorID(Integer id){
+		List<Huespedes> resultado = new ArrayList<>();
+		String query="SELECT id, nombre, apellido, fechaDeNacimiento, nacionalidad, telefono, idReserva FROM huespedes WHERE id = ?";
+		try {
+			final PreparedStatement state = con.prepareStatement(query,Statement.RETURN_GENERATED_KEYS);
+				try (state){
+					state.setInt(1, id);
+					ResultSet res = state.executeQuery();
+					while(res.next()) {
+						Huespedes huesped = new Huespedes(res.getInt(1),res.getString(2),res.getString(3),res.getDate(4),res.getString(5),res.getString(6),res.getInt(7));
+						resultado.add(huesped);
+					}
+				}
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return resultado;
+	}
+	
 	public void eliminar(Integer id) {
 		String query="DELETE FROM huespedes WHERE id = ?";
 		try {

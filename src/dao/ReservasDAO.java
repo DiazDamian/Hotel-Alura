@@ -35,7 +35,25 @@ public class ReservasDAO {
 		}
 		return resultado;
 	}
-	
+	public List<Reservas> buscarReservasPorID(Integer id){
+		List<Reservas> resultado= new ArrayList<>();
+		
+		try {
+			String query="SELECT id, fechaDeEntrada, fechaDeSalida, valor, formaPago FROM reservas WHERE id = ?";
+			final PreparedStatement state = con.prepareStatement(query);
+				try(state){
+					state.setInt(1, id);
+					final ResultSet res =state.executeQuery();
+					while(res.next()) {
+						Reservas reserva =new Reservas(res.getInt(1),res.getDate(2),res.getDate(3),res.getString(4),res.getString(5));
+						resultado.add(reserva);
+					}
+				}
+		}catch(SQLException e) {
+			throw new RuntimeException(e);
+		}
+		return resultado;
+	}
 	
 	
 	public void guardarReserva(Reservas reserva) {
