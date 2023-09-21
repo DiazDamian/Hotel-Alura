@@ -7,6 +7,11 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
+
+import controllers.HuespedesController;
+import controllers.ReservasController;
+import modelos.Huespedes;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
@@ -19,6 +24,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 import java.text.Format;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
@@ -38,7 +44,8 @@ public class RegistroHuesped extends JFrame {
 	private JLabel labelExit;
 	private JLabel labelAtras;
 	int xMouse, yMouse;
-
+	private HuespedesController huespedesController = new HuespedesController();
+	private Huespedes huesped;
 	/**
 	 * Launch the application.
 	 */
@@ -253,6 +260,17 @@ public class RegistroHuesped extends JFrame {
 		btnguardar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				//todo agregar metodo de guardar en db
+				String nombre = txtNombre.getText();
+				String apellido = txtApellido.getText();
+				Date fechaNacimiento =  new Date(txtFechaN.getDate().getYear(),txtFechaN.getDate().getMonth(),txtFechaN.getDate().getDay());
+				String nacionalidad = txtNacionalidad.getSelectedItem().toString();
+				String telefono = txtTelefono.getText();
+				Integer numeroReserva = Integer.valueOf(txtNreserva.getText());
+				System.out.println(nombre+" "+apellido+" "+fechaNacimiento+" "+nacionalidad+" "+telefono+" "+numeroReserva);
+				huesped=new Huespedes(nombre,apellido,fechaNacimiento,nacionalidad,telefono,numeroReserva);
+				huespedesController.guardar(huesped);
+				
 			}
 		});
 		btnguardar.setLayout(null);

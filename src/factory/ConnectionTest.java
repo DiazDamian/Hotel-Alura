@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import controllers.HuespedesController;
+import controllers.ReservasController;
 import dao.HuespedesDAO;
 import dao.ReservasDAO;
 import modelos.Huespedes;
@@ -24,6 +26,8 @@ public class ConnectionTest {
 		Connection con = conFactory.conectar();
 		ReservasDAO rdao = new ReservasDAO(con);
 		HuespedesDAO hdao = new HuespedesDAO(con);
+		HuespedesController huespedController = new HuespedesController();
+		ReservasController reservasController;
 		try {
 			System.out.println("probando conexion");
 			
@@ -40,9 +44,10 @@ public class ConnectionTest {
 			rdao.actualizarReserva(fechaE, fechaS, "2000", "Dinero en efectivo", 5);
 			//rdao.guardarReserva(res);
 			*/
-			Huespedes huesped = new Huespedes("pablo","guerrez",new Date(123,2,2),"argentina","123456789",2);
+			Huespedes huesped = new Huespedes("paco","guerrero",new Date(123,2,2),"argentino","123459999",1);
+			huespedController.guardar(huesped);
 			//hdao.guardar(huesped);
-			hdao.actualizarHuesped(huesped.getNombre(), huesped.getApellido(), huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(), huesped.getIdReserva(), 6);
+			//hdao.actualizarHuesped(huesped.getNombre(), huesped.getApellido(), huesped.getFechaNacimiento(), huesped.getNacionalidad(), huesped.getTelefono(), huesped.getIdReserva(), 6);
 			//rdao.eliminarReserva(10);
 			
 			
