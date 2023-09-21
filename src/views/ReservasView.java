@@ -11,6 +11,10 @@ import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+
+import controllers.ReservasController;
+import modelos.Reservas;
+
 import java.awt.Font;
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
@@ -20,6 +24,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.Toolkit;
 import java.beans.PropertyChangeListener;
+import java.sql.Date;
 import java.beans.PropertyChangeEvent;
 import javax.swing.JSeparator;
 import javax.swing.SwingConstants;
@@ -37,7 +42,8 @@ public class ReservasView extends JFrame {
 	int xMouse, yMouse;
 	private JLabel labelExit;
 	private JLabel labelAtras;
-
+	private ReservasController reservasController = new ReservasController();
+	private Reservas reserva;
 	/**
 	 * Launch the application.
 	 */
@@ -296,8 +302,17 @@ public class ReservasView extends JFrame {
 		btnsiguiente.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {		
-					RegistroHuesped registro = new RegistroHuesped();
+				if (ReservasView.txtFechaEntrada.getDate() != null && ReservasView.txtFechaSalida.getDate() != null) {
+					Date fechaEntrada=new Date(txtFechaEntrada.getDate().getYear(),txtFechaEntrada.getDate().getMonth(),txtFechaEntrada.getDate().getDay());
+					Date fechaSalida =new Date(txtFechaEntrada.getDate().getYear(),txtFechaEntrada.getDate().getMonth(),txtFechaEntrada.getDate().getDay());
+					String valor =txtValor.getText();
+					String formaPago =txtFormaPago.getItemAt(txtFormaPago.getSelectedIndex()) ;
+					reserva = new Reservas(fechaEntrada,fechaSalida,valor,formaPago);
+					System.out.println(reserva.getFechaEntrada()+" "+reserva.getFechaSalida()+" "+reserva.getValor()+" "+reserva.getFormaPago());
+					
+					reservasController.guardar(reserva);
+					System.out.println(reserva.getId());
+					RegistroHuesped registro = new RegistroHuesped(reserva.getId());
 					registro.setVisible(true);
 				} else {
 					JOptionPane.showMessageDialog(null, "Debes llenar todos los campos.");
