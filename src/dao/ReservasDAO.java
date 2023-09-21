@@ -35,11 +35,12 @@ public class ReservasDAO {
 		}
 		return resultado;
 	}
+	
 	public List<Reservas> buscarReservasPorID(Integer id){
 		List<Reservas> resultado= new ArrayList<>();
 		
 		try {
-			String query="SELECT id, fechaDeEntrada, fechaDeSalida, valor, formaPago FROM reservas WHERE id = ?";
+			String query="SELECT reservas.id, reservas.fechaDeEntrada, reservas.fechaDeSalida, reservas.valor, reservas.formaPago FROM reservas INNER JOIN huespedes ON reservas.id = huespedes.idReserva WHERE huespedes.idReserva = ?";
 			final PreparedStatement state = con.prepareStatement(query);
 				try(state){
 					state.setInt(1, id);

@@ -25,6 +25,9 @@ public class HuespedesController {
 	public List<Huespedes> listarHuespedesId(Integer id){
 		return this.huespedesDao.buscarHuespedesPorID(id);
 	}
+	public List<Huespedes> listarHuespedesApellido(String apellido){
+		return this.huespedesDao.buscarHuespedesPorApellido(apellido);
+	}
 	public void actualizar(String nombre,String apellido,Date fechaNacimiento,String nacionalidad,String telefono,Integer idReserva, Integer id) {
 		this.huespedesDao.actualizarHuesped(nombre, apellido, fechaNacimiento, nacionalidad, telefono, idReserva, id);
 	}

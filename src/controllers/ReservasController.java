@@ -24,6 +24,7 @@ public class ReservasController {
 	public List<Reservas> buscarId(Integer id){
 		return this.reservasDao.buscarReservasPorID(id);
 	}
+	
 	public void actualizar(Date fechaEntrada,Date fechaSalida,String valor,String formaPago,Integer id) {
 		this.reservasDao.actualizarReserva(fechaEntrada, fechaSalida, valor, formaPago, id);
 	}

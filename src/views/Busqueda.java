@@ -6,6 +6,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableModel;
+
+import controllers.HuespedesController;
+import controllers.ReservasController;
+import modelos.Huespedes;
+import modelos.Reservas;
+
 import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.JButton;
@@ -15,7 +21,9 @@ import java.awt.SystemColor;
 import javax.swing.JLabel;
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 import java.awt.event.ActionEvent;
 import javax.swing.JTabbedPane;
 import java.awt.Toolkit;
@@ -25,6 +33,7 @@ import javax.swing.ListSelectionModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.Date;
 
 @SuppressWarnings("serial")
 public class Busqueda extends JFrame {
@@ -38,7 +47,12 @@ public class Busqueda extends JFrame {
 	private JLabel labelAtras;
 	private JLabel labelExit;
 	int xMouse, yMouse;
-
+	//-------------------
+	private HuespedesController huespedesController = new HuespedesController();
+	private ReservasController reservasController = new ReservasController();
+	private List<Huespedes> huespedes = new ArrayList<>();
+	private List<Reservas> reservas;
+	//-------------------
 	/**
 	 * Launch the application.
 	 */
@@ -216,7 +230,30 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				
+				
+				if(txtBuscar.getText().isEmpty()) {
+					//utilizar metodo buscar
+					
+					huespedes=huespedesController.listarHuespedes();
+					reservas=reservasController.buscar();
+					System.out.println(huespedes.toString());
+					huespedes.forEach(huesped ->{modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
+							huesped.getFechaNacimiento(),huesped.getNacionalidad(),
+							huesped.getTelefono(),huesped.getIdReserva()}); });
+					reservas.forEach(reserva -> {modelo.addRow(new Object[] {reserva.getId(),reserva.getFechaEntrada(),reserva.getFechaSalida(),reserva.getValor(),reserva.getFormaPago()} ); });
+					
+				}
+				if(!txtBuscar.getText().isEmpty()) {
+					huespedes=huespedesController.listarHuespedesApellido(txtBuscar.getText());
+					System.out.println(huespedes);
+					huespedes.forEach(huesped ->{
+							modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
+							huesped.getFechaNacimiento(),huesped.getNacionalidad(),
+							huesped.getTelefono(),huesped.getIdReserva()}); });
+					
+					
+				}
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -240,6 +277,35 @@ public class Busqueda extends JFrame {
 		contentPane.add(btnEditar);
 		
 		JLabel lblEditar = new JLabel("EDITAR");
+		lblEditar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(tbHuespedes.getSelectedRow()!=-1 && tbHuespedes.isFocusOwner()) {
+	
+				Integer id = (Integer)tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 0);
+				String nombre= tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 1).toString();
+				String apellido= tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 2).toString();
+				Date fecha= (Date)tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 3);
+				String nacionalidad= tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 4).toString();
+				String telefono= tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 5).toString();
+				Integer idReserva= (Integer)tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 6);
+				
+				System.out.println(id+" "+nombre+" "+apellido+" "+fecha+" "+nacionalidad+" "+telefono+" "+idReserva);
+				huespedesController.actualizar(nombre, apellido, fecha, nacionalidad, telefono, idReserva, idReserva);
+				}
+				if(tbReservas.getSelectedRow()!=-1 && tbReservas.isFocusOwner()) {
+					Integer id = (Integer)tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 0);
+					Date fechaEntrada = (Date)tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 1);
+					Date fechaSalida = (Date)tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 2);
+					String valor = tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 3).toString();
+					String fpago = tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 4).toString();
+					
+					System.out.println(id+" "+fechaEntrada+" "+fechaSalida+" "+valor+" "+fpago);
+					reservasController.actualizar(fechaEntrada, fechaSalida, valor, fpago, id);
+				}
+			
+			}
+		});
 		lblEditar.setHorizontalAlignment(SwingConstants.CENTER);
 		lblEditar.setForeground(Color.WHITE);
 		lblEditar.setFont(new Font("Roboto", Font.PLAIN, 18));
@@ -247,6 +313,25 @@ public class Busqueda extends JFrame {
 		btnEditar.add(lblEditar);
 		
 		JPanel btnEliminar = new JPanel();
+		btnEliminar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+				if(tbHuespedes.getSelectedRow()!=-1 && tbHuespedes.isFocusOwner()) {	
+					Integer id = (Integer)tbHuespedes.getModel().getValueAt(tbHuespedes.getSelectedRow(), 0);
+					System.out.println(id);
+					//huespedesController.eliminar(id);
+					modeloHuesped.removeRow(tbHuespedes.getSelectedRow());
+				
+				}
+				if(tbReservas.getSelectedRow()!=-1 && tbReservas.isFocusOwner()) {
+					Integer id = (Integer)tbReservas.getModel().getValueAt(tbReservas.getSelectedRow(), 0);
+					System.out.println(id);
+					//reservasController.eliminar(id);
+					modelo.removeRow(tbReservas.getSelectedRow());
+				}
+			}
+		});
 		btnEliminar.setLayout(null);
 		btnEliminar.setBackground(new Color(12, 138, 199));
 		btnEliminar.setBounds(767, 508, 122, 35);
