@@ -51,7 +51,9 @@ public class Busqueda extends JFrame {
 	private HuespedesController huespedesController = new HuespedesController();
 	private ReservasController reservasController = new ReservasController();
 	private List<Huespedes> huespedes = new ArrayList<>();
-	private List<Reservas> reservas;
+	private List<Reservas> reservas = new ArrayList<>();
+	private List<Huespedes> listaDeHuespedes = new ArrayList<>();
+	private List<Reservas> listaDeReservas = new ArrayList<>();
 	//-------------------
 	/**
 	 * Launch the application.
@@ -230,30 +232,9 @@ public class Busqueda extends JFrame {
 		btnbuscar.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				limpiarLista();
+				poblarLista();
 				
-				
-				if(txtBuscar.getText().isEmpty()) {
-					//utilizar metodo buscar
-					
-					huespedes=huespedesController.listarHuespedes();
-					reservas=reservasController.buscar();
-					System.out.println(huespedes.toString());
-					huespedes.forEach(huesped ->{modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
-							huesped.getFechaNacimiento(),huesped.getNacionalidad(),
-							huesped.getTelefono(),huesped.getIdReserva()}); });
-					reservas.forEach(reserva -> {modelo.addRow(new Object[] {reserva.getId(),reserva.getFechaEntrada(),reserva.getFechaSalida(),reserva.getValor(),reserva.getFormaPago()} ); });
-					
-				}
-				if(!txtBuscar.getText().isEmpty()) {
-					huespedes=huespedesController.listarHuespedesApellido(txtBuscar.getText());
-					System.out.println(huespedes);
-					huespedes.forEach(huesped ->{
-							modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
-							huesped.getFechaNacimiento(),huesped.getNacionalidad(),
-							huesped.getTelefono(),huesped.getIdReserva()}); });
-					
-					
-				}
 			}
 		});
 		btnbuscar.setLayout(null);
@@ -358,4 +339,72 @@ public class Busqueda extends JFrame {
 	        int y = evt.getYOnScreen();
 	        this.setLocation(x - xMouse, y - yMouse);
 }
+	    
+	    public void poblarLista() {
+	    	huespedes=huespedesController.listarHuespedes();
+			reservas=reservasController.buscar();
+			listaDeHuespedes=huespedes;
+			listaDeReservas=reservas;
+	    	if(txtBuscar.getText().isEmpty()) {
+				//utilizar metodo buscar
+				
+				//System.out.println(listaDeHuespedes.toString());
+				llenarFilas();
+			}
+			if(!txtBuscar.getText().isEmpty()) {
+				/*huespedes=huespedesController.listarHuespedesApellido(txtBuscar.getText());
+				System.out.println(listaDeHuespedes);
+				huespedes.forEach(huesped ->{
+						modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
+						huesped.getFechaNacimiento(),huesped.getNacionalidad(),
+						huesped.getTelefono(),huesped.getIdReserva()}); });
+				*/
+				//System.out.println(txtBuscar.getText());
+				filtrar(txtBuscar.getText());
+			}
+	    }
+	    public void llenarFilas() {
+	    	listaDeHuespedes.forEach(huesped ->{modeloHuesped.addRow(new Object[] {huesped.getId(),huesped.getNombre(),huesped.getApellido(),
+					huesped.getFechaNacimiento(),huesped.getNacionalidad(),
+					huesped.getTelefono(),huesped.getIdReserva()}); });
+			listaDeReservas.forEach(reserva -> {modelo.addRow(new Object[] {reserva.getId(),reserva.getFechaEntrada(),reserva.getFechaSalida(),reserva.getValor(),reserva.getFormaPago()} ); });
+			
+	    }
+	    public void filtrar(String texto) {
+	    	listaDeHuespedes.clear();
+	    	listaDeReservas.clear();
+	    	huespedes=huespedesController.listarHuespedes();
+			reservas=reservasController.buscar();
+	    	//System.out.println("el texto ingresado "+texto);
+	    	huespedes.forEach(huesped->{
+	    		//System.out.println("huesped apellido: "+huesped.getApellido());
+	    		if(huesped.getApellido().equals(texto) || huesped.getIdReserva().equals(Integer.valueOf(texto))) {
+	    			//System.out.println("hay coincidencia");
+	    			listaDeHuespedes.add(huesped);
+	    		}
+	    	});	
+	    	
+	    	listaDeHuespedes.forEach(huesped->{
+	    		reservas.forEach(reserva->{
+	    		if(reserva.getId().equals(huesped.getIdReserva())) {
+	    			listaDeReservas.add(reserva);
+	    				}
+	    			});
+	    	});
+	    	llenarFilas();
+	    }
+	    public void limpiarLista() {
+	    	if(modeloHuesped.getRowCount()>0) {
+	    		//System.out.println(modeloHuesped.getRowCount());
+	    		while(modeloHuesped.getRowCount()>0) {
+	    			modeloHuesped.removeRow(modeloHuesped.getRowCount()-1);
+	    		}
+	    		
+	    	}
+	    	if(modelo.getRowCount()>0) {
+	    		while(modelo.getRowCount()>0) {
+	    			modelo.removeRow(modelo.getRowCount()-1);
+	    		}
+	    	}
+	    }
 }
